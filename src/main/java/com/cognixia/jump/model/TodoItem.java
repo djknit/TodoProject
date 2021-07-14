@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+//somebody was here
 public class TodoItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
