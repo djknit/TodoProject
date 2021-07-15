@@ -50,6 +50,7 @@ public class UserController {
 	
 	@GetMapping("/user")
 	public UserDetails getCurrentUser() {
+		System.out.println(MyUserDetailsService.getCurrentUserDetails());
 		return MyUserDetailsService.getCurrentUserDetails();
 	}
 	
