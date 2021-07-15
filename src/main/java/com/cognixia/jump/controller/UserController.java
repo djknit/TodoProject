@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.InvalidDataInput;
+import com.cognixia.jump.exception.ResouceNotFoundException;
 import com.cognixia.jump.model.AuthenticationRequest;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepository;
@@ -49,10 +51,12 @@ public class UserController {
 //	}
 	
 	@GetMapping("/user")
-	public User getCurrentUser() {
-		System.out.println(MyUserDetailsService.getCurrentUserDetails());
-		return repo.findById(MyUserDetailsService.getCurrentUserId()).get();
-//		return MyUserDetailsService.getCurrentUserDetails();
+	public User getCurrentUser() throws ResouceNotFoundException {
+		try {
+			return repo.findById(MyUserDetailsService.getCurrentUserId()).get();
+		} catch(Exception e) {
+			throw new ResouceNotFoundException(e.getMessage());
+		}
 	}
 	
 	@PostMapping("/user")
