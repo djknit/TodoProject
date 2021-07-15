@@ -2,12 +2,18 @@ package com.cognixia.jump.controller;
 
 import com.cognixia.jump.model.TodoItem;
 import com.cognixia.jump.repository.TodoRepository;
+import com.cognixia.jump.repository.UserRepository;
+import com.cognixia.jump.service.MyUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RequestMapping("/api")
 @RestController
@@ -15,19 +21,36 @@ public class TodoController {
 
     @Autowired
     TodoRepository repo;
+    
+    @Autowired
+    UserRepository userRepo;
+    
 
     //find all todo
 
     @GetMapping("/todo")
     public List<TodoItem> getAllTodo(){
-        return repo.findAll();
+    	return userRepo.getById(MyUserDetailsService.getCurrentUserId()).getTodoItems();
     }
 
     //add a new todo
 
     @PostMapping("/todo/create")
     public TodoItem createTodo(@RequestBody TodoItem todoItem){
-        TodoItem created = repo.save(todoItem);
+        
+    	long currDateInMilli = ZonedDateTime.now().toInstant().toEpochMilli();
+		Date createdDate = new Date(currDateInMilli); // <- today
+		Date dueDate = new Date(currDateInMilli + TimeUnit.DAYS.toMillis(7)); // <- 1 week from now
+    	
+		todoItem.setDateOfCreation(createdDate);
+		
+		if (todoItem.getDueDate() == null) {
+			todoItem.setDueDate(dueDate);
+		}
+		
+		todoItem.setUser(userRepo.getById(MyUserDetailsService.getCurrentUserId()));
+		
+    	TodoItem created = repo.save(todoItem);
 
         return created;
     }

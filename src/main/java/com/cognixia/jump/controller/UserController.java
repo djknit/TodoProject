@@ -37,21 +37,22 @@ public class UserController {
 	@Autowired
 	UserRepository repo;
 	
-	@PostMapping("/authenticate")
-	public ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest request) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-		} catch (Exception e) {
-			throw new Exception("Username or password is incorrect.");
-		}
-		
-		return ResponseEntity.ok(null);
-	}
+//	@PostMapping("/authenticate")
+//	public ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest request) throws Exception {
+//		try {
+//			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+//		} catch (Exception e) {
+//			throw new Exception("Username or password is incorrect.");
+//		}
+//		
+//		return ResponseEntity.ok(null);
+//	}
 	
 	@GetMapping("/user")
-	public UserDetails getCurrentUser() {
+	public User getCurrentUser() {
 		System.out.println(MyUserDetailsService.getCurrentUserDetails());
-		return MyUserDetailsService.getCurrentUserDetails();
+		return repo.findById(MyUserDetailsService.getCurrentUserId()).get();
+//		return MyUserDetailsService.getCurrentUserDetails();
 	}
 	
 	@PostMapping("/user")
