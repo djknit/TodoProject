@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -27,13 +29,20 @@ public class User implements Serializable {
 	private Long id;
 	
 	@Column( unique = true )
+	@Size( min = 3, message = "Your username must be at least 3 characters long." )
+	@NotBlank( message = "Your username cannot be blank." )
 	private String username;
 	
+	@NotBlank( message = "Your password must not be blank." )
+	@Size( min = 4, message = "Your password must be at least 4 characters long." )
 	@Column( nullable = false )
 	private String password;
 	
-//	@Column( columnDefinition = "boolean default true" )
-//	private boolean enabled;
+	@NotBlank( message = "First name cannot be blank." )
+	private String firstName;
+	
+	@NotBlank( message = "Last name cannot be blank." )
+	private String lastName;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
