@@ -20,7 +20,6 @@ public class MyUserDetails implements UserDetails {
 	private String username;
 	private String password;
 	private List<GrantedAuthority> authorities;
-	private List<TodoItem> todoItems;
 	private String firstName;
 	private String lastName;
 	
@@ -32,7 +31,6 @@ public class MyUserDetails implements UserDetails {
 		this.id = user.getId();
 		this.username = user.getUsername();
 		this.password = user.getPassword();
-		this.todoItems = user.getTodoItems();
 		this.authorities = Arrays.asList( new SimpleGrantedAuthority( user.getRole().name() ) );
 	}
 	
@@ -55,9 +53,6 @@ public class MyUserDetails implements UserDetails {
 		return id;
 	}
 	
-	public List<TodoItem> getTodoItems() {
-		return todoItems;
-	}
 
 	@Override
 	public boolean isAccountNonExpired() {

@@ -33,10 +33,10 @@ public class TodoController {
     }
 
     //update a todo
-    @PutMapping("/todo/update/{todo_id}")
-    public ResponseEntity<TodoItem> updateTodo(@PathVariable long todo_id){
-        Optional<TodoItem> todoItem = repo.findById(todo_id);
-    }
+//    @PutMapping("/todo/update/{todo_id}")
+//    public ResponseEntity<TodoItem> updateTodo(@PathVariable long todo_id){
+//        Optional<TodoItem> todoItem = repo.findById(todo_id);
+//    }
 
     //delete a todo
 
