@@ -53,14 +53,16 @@ public class User implements Serializable {
 	private List<TodoItem> todoItems;
 	
 	public User() {
-		this(-1L, "N/A", "N/A", Role.ROLE_USER);
+		this(-1L, "N/A", "N/A", Role.ROLE_USER, "N/A", "N/A");
 	}
-	public User(Long id, String username, String password, Role role) {
+	public User(Long id, String username, String password, Role role, String firstName, String lastName) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	public Long getId() {
@@ -96,6 +98,20 @@ public class User implements Serializable {
 	}
 	public void setTodoItems(List<TodoItem> todoItems) {
 		this.todoItems = todoItems;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	
 	@Override
