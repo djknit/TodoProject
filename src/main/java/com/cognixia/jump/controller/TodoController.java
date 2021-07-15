@@ -33,7 +33,7 @@ public class TodoController {
     }
 
     //update a todo
-    @PutMapping("/todo/update/")
+    @PutMapping("/todo/update")
     public ResponseEntity<TodoItem> updateTodo(@RequestBody TodoItem todoItem){
         Optional<TodoItem> todoItemX = repo.findById(todoItem.getId());
         if(todoItemX.isPresent()){
@@ -61,6 +61,24 @@ public class TodoController {
             return ResponseEntity.status(200)
                     .body(todoItem1);
         }
+        else{
+            return ResponseEntity.status(400)
+                    .body(new TodoItem());
+        }
+    }
+
+    @PatchMapping("/todo/update/completed")
+    public ResponseEntity<TodoItem> updateTodoComplete(@RequestBody TodoItem todoItem){
+        long idSpec = todoItem.getId();
+        if(repo.existsById(idSpec)){
+            TodoItem todoItem1 = repo.findById(todoItem.getId()).get();
+            todoItem1.setCompleted(true);
+            repo.save(todoItem1);
+
+            return ResponseEntity.status(200)
+                    .body(todoItem1);
+        }
+
         else{
             return ResponseEntity.status(400)
                     .body(new TodoItem());
