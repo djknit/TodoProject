@@ -32,8 +32,8 @@ public class User implements Serializable {
 	@Column( nullable = false )
 	private String password;
 	
-	@Column( columnDefinition = "boolean default true" )
-	private boolean enabled;
+//	@Column( columnDefinition = "boolean default true" )
+//	private boolean enabled;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -82,9 +82,16 @@ public class User implements Serializable {
 		this.role = role;
 	}
 	
+	public List<TodoItem> getTodoItems() {
+		return todoItems;
+	}
+	public void setTodoItems(List<TodoItem> todoItems) {
+		this.todoItems = todoItems;
+	}
+	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
+		return "User [id=" + id + ", username=" + username + ", password=" + password
 				+ ", role=" + role + "]";
 	}
 }
