@@ -2,18 +2,12 @@ package com.cognixia.jump.controller;
 
 import com.cognixia.jump.model.TodoItem;
 import com.cognixia.jump.repository.TodoRepository;
-import com.cognixia.jump.repository.UserRepository;
-import com.cognixia.jump.service.MyUserDetailsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @RequestMapping("/api")
 @RestController
@@ -21,36 +15,19 @@ public class TodoController {
 
     @Autowired
     TodoRepository repo;
-    
-    @Autowired
-    UserRepository userRepo;
-    
 
     //find all todo
 
     @GetMapping("/todo")
     public List<TodoItem> getAllTodo(){
-    	return userRepo.getById(MyUserDetailsService.getCurrentUserId()).getTodoItems();
+        return repo.findAll();
     }
 
     //add a new todo
 
     @PostMapping("/todo/create")
     public TodoItem createTodo(@RequestBody TodoItem todoItem){
-        
-    	long currDateInMilli = ZonedDateTime.now().toInstant().toEpochMilli();
-		Date createdDate = new Date(currDateInMilli); // <- today
-		Date dueDate = new Date(currDateInMilli + TimeUnit.DAYS.toMillis(7)); // <- 1 week from now
-    	
-		todoItem.setDateOfCreation(createdDate);
-		
-		if (todoItem.getDueDate() == null) {
-			todoItem.setDueDate(dueDate);
-		}
-		
-		todoItem.setUser(userRepo.getById(MyUserDetailsService.getCurrentUserId()));
-		
-    	TodoItem created = repo.save(todoItem);
+        TodoItem created = repo.save(todoItem);
 
         return created;
     }
@@ -70,6 +47,24 @@ public class TodoController {
                     .body(new TodoItem());
         }
         //update object
+    }
+
+    //update description
+    @PatchMapping("/todo/update/description")
+    public ResponseEntity<TodoItem> updateTodoDescription(@RequestBody TodoItem todoItem){
+        long idSpec = todoItem.getId();
+        if(repo.existsById(idSpec)){
+            TodoItem todoItem1 = repo.findById(todoItem.getId()).get();
+            todoItem1.setDescription(todoItem.getDescription());
+            repo.save(todoItem1);
+
+            return ResponseEntity.status(200)
+                    .body(todoItem1);
+        }
+        else{
+            return ResponseEntity.status(400)
+                    .body(new TodoItem());
+        }
     }
 
     //delete a todo
