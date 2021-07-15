@@ -33,9 +33,20 @@ public class TodoController {
     }
 
     //update a todo
-    @PutMapping("/todo/update/{todo_id}")
-    public ResponseEntity<TodoItem> updateTodo(@PathVariable long todo_id){
-        Optional<TodoItem> todoItem = repo.findById(todo_id);
+    @PutMapping("/todo/update/")
+    public ResponseEntity<TodoItem> updateTodo(@RequestBody TodoItem todoItem){
+        Optional<TodoItem> todoItemX = repo.findById(todoItem.getId());
+        if(todoItemX.isPresent()){
+            repo.save(todoItem);
+
+            return ResponseEntity.status(200)
+                    .body(todoItem);
+        }
+        else{
+            return ResponseEntity.status(400)
+                    .body(new TodoItem());
+        }
+        //update object
     }
 
     //delete a todo
