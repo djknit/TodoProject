@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.cognixia.jump.model.TodoItem;
 import com.cognixia.jump.model.User;
 
 public class MyUserDetails implements UserDetails {
@@ -20,8 +19,6 @@ public class MyUserDetails implements UserDetails {
 	private String username;
 	private String password;
 	private List<GrantedAuthority> authorities;
-	private String firstName;
-	private String lastName;
 	
 	public MyUserDetails() { }
 	public MyUserDetails(String username) {

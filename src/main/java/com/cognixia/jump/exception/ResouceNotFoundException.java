@@ -7,5 +7,9 @@ public class ResouceNotFoundException extends Exception {
 	public ResouceNotFoundException(String message) {
 		super(message);
 	}
+	
+	public ResouceNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.cognixia.jump.filter.JwtRequestFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -19,14 +23,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserDetailsService userDetailsService;
 	
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService);
 	}
 	
-	@Bean PasswordEncoder passwordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
+	@Bean
+	PasswordEncoder passwordEncoder() {
 //		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
 	}
 	
 	@Override
@@ -35,19 +43,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/user").permitAll()
-			.antMatchers(HttpMethod.GET, "/api/user").hasRole("USER")
-			.antMatchers("/*").hasRole("USER")
-			.and().httpBasic();
+			.anyRequest().authenticated()
+			.and().sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	// provides method for spring security to access the AuthenticationManager needed when
-		// authenticating users accessing our APIs (used in autowire within HelloController class)
-		@Override
-		@Bean
-		public AuthenticationManager authenticationManagerBean() throws Exception {
-			
-			return super.authenticationManagerBean();
-		}
+	// authenticating users accessing our APIs
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		
+		return super.authenticationManagerBean();
+	}
 		
 	
 }
