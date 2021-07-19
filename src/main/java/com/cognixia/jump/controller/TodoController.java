@@ -27,14 +27,10 @@ public class TodoController {
     UserRepository userRepo;
     
 
-    //find all todo
-
     @GetMapping("/todo")
-    public List<TodoItem> getAllTodo(){
+    public List<TodoItem> getAllTodoForUser(){
     	return userRepo.getById(MyUserDetailsService.getCurrentUserId()).getTodoItems();
     }
-
-    //add a new todo
 
     @PostMapping("/todo/create")
     public TodoItem createTodo(@RequestBody TodoItem todoItem){
@@ -58,7 +54,7 @@ public class TodoController {
 
     //update a todo
     @PutMapping("/todo/update")
-    public ResponseEntity<TodoItem> updateTodo(@RequestBody TodoItem todoItem){
+    public ResponseEntity<?> updateTodo(@RequestBody TodoItem todoItem){
         Optional<TodoItem> todoItemX = repo.findById(todoItem.getId());
         if(todoItemX.isPresent()){
             repo.save(todoItem);
@@ -75,7 +71,7 @@ public class TodoController {
     
   //update description
     @PatchMapping("/todo/update/description")
-    public ResponseEntity<TodoItem> updateTodoDescription(@RequestBody TodoItem todoItem){
+    public ResponseEntity<?> updateTodoDescription(@RequestBody TodoItem todoItem){
         long idSpec = todoItem.getId();
         if(repo.existsById(idSpec)){
             TodoItem todoItem1 = repo.findById(todoItem.getId()).get();
@@ -92,7 +88,7 @@ public class TodoController {
     }
 
     @PatchMapping("/todo/update/completed")
-    public ResponseEntity<TodoItem> updateTodoComplete(@RequestBody TodoItem todoItem){
+    public ResponseEntity<?> updateTodoComplete(@RequestBody TodoItem todoItem){
         long idSpec = todoItem.getId();
         if(repo.existsById(idSpec)){
             TodoItem todoItem1 = repo.findById(todoItem.getId()).get();
@@ -112,7 +108,7 @@ public class TodoController {
     //delete a todo
 
     @DeleteMapping("/todo/delete/{todo_id}")
-    public ResponseEntity<TodoItem> deleteTodo(@PathVariable long todo_id){
+    public ResponseEntity<?> deleteTodo(@PathVariable long todo_id){
         Optional<TodoItem>  todoItem = repo.findById(todo_id);
 
         if(todoItem.isPresent()){
